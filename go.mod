@@ -1,22 +1,18 @@
 module github.com/pivotal/monitoring-indicator-protocol
 
 require (
-	github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973 // indirect
-	github.com/cespare/xxhash v1.1.0 // indirect
-	github.com/go-kit/kit v0.7.0 // indirect
-	github.com/go-logfmt/logfmt v0.3.0 // indirect
-	github.com/go-stack/stack v1.8.0 // indirect
+	code.cloudfoundry.org/go-envstruct v1.4.0
 	github.com/gobwas/glob v0.2.3
-	github.com/gogo/protobuf v1.1.2-0.20180830160456-5669497fd644 // indirect
-	github.com/golang/protobuf v1.2.0 // indirect
-	github.com/gorilla/context v1.1.1 // indirect
-	github.com/gorilla/mux v1.6.2
-	github.com/kr/logfmt v0.0.0-20140226030751-b84e30acd515 // indirect
+	github.com/golang/groupcache v0.0.0-20190129154638-5b532d6fd5ef // indirect
+	github.com/google/btree v0.0.0-20180813153112-4030bb1f1f0c // indirect
+	github.com/google/gofuzz v0.0.0-20170612174753-24818f796faf // indirect
+	github.com/googleapis/gnostic v0.2.0 // indirect
+	github.com/gorilla/mux v1.7.0
+	github.com/gregjones/httpcache v0.0.0-20190203031600-7a902570cb17 // indirect
+	github.com/json-iterator/go v1.1.5 // indirect
 	github.com/krishicks/yaml-patch v0.0.10
-	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
-	github.com/oklog/ulid v1.3.1 // indirect
-	github.com/onsi/ginkgo v1.5.0 // indirect
-	github.com/onsi/gomega v1.4.0
+	github.com/modern-go/reflect2 v1.0.1 // indirect
+	github.com/onsi/gomega v1.4.3
 	github.com/opentracing/opentracing-go v1.0.2 // indirect
 	github.com/prometheus/client_golang v0.9.0-pre1.0.20180905125505-3525612fea19
 	github.com/prometheus/client_model v0.0.0-20180712105110-5c3871d89910 // indirect
