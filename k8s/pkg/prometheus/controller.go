@@ -3,7 +3,7 @@ package prometheus
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/pivotal/indicator-protocol/k8s/pkg/apis/indicatordocument/v1alpha1"
+	"github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/apis/indicatordocument/v1alpha1"
 	"k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"log"

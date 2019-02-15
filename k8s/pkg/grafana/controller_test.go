@@ -1,4 +1,4 @@
-package prometheus_test
+package grafana_test
 
 import (
 	"github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/apis/indicatordocument/v1alpha1"

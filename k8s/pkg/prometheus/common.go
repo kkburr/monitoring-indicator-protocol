@@ -1,5 +1,5 @@
 package prometheus
 
 const (
-	ConfigMapName = "prometheus"
+	ConfigMapName = "prometheus-server"
 )

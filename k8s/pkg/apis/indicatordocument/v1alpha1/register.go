@@ -5,7 +5,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
-	"github.com/pivotal/indicator-protocol/k8s/pkg/apis/indicatordocument"
+	"github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/apis/indicatordocument"
 )
 
 // SchemeGroupVersion is group version used to register these objects

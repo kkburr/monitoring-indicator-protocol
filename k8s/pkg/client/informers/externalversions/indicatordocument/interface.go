@@ -19,8 +19,8 @@ limitations under the License.
 package apps
 
 import (
-	v1alpha1 "github.com/pivotal/indicator-protocol/k8s/pkg/client/informers/externalversions/indicatordocument/v1alpha1"
-	internalinterfaces "github.com/pivotal/indicator-protocol/k8s/pkg/client/informers/externalversions/internalinterfaces"
+	v1alpha1 "github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/client/informers/externalversions/indicatordocument/v1alpha1"
+	internalinterfaces "github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/client/informers/externalversions/internalinterfaces"
 )
 
 // Interface provides access to each of this group's versions.

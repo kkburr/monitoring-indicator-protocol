@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/client/clientset/versioned"
-	"github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/prometheus"
 	"context"
 	"flag"
+	"github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/client/clientset/versioned"
+	"github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/grafana"
 	"log"
 	"os"
 	"os/signal"
@@ -51,12 +51,7 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	promConfig := prometheus.NewConfig()
-
-	controller := prometheus.NewController(
-		coreV1Client.ConfigMaps(conf.Namespace),
-		promConfig,
-	)
+	controller := grafana.NewController(coreV1Client.ConfigMaps(conf.Namespace))
 
 	informerFactory := informers.NewSharedInformerFactory(client, time.Second*30)
 

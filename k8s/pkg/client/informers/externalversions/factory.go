@@ -23,9 +23,9 @@ import (
 	sync "sync"
 	time "time"
 
-	versioned "github.com/pivotal/indicator-protocol/k8s/pkg/client/clientset/versioned"
-	indicatordocument "github.com/pivotal/indicator-protocol/k8s/pkg/client/informers/externalversions/indicatordocument"
-	internalinterfaces "github.com/pivotal/indicator-protocol/k8s/pkg/client/informers/externalversions/internalinterfaces"
+	versioned "github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/client/clientset/versioned"
+	indicatordocument "github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/client/informers/externalversions/indicatordocument"
+	internalinterfaces "github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/client/informers/externalversions/internalinterfaces"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"

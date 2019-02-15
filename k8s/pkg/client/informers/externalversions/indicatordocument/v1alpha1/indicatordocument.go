@@ -21,10 +21,10 @@ package v1alpha1
 import (
 	time "time"
 
-	indicatordocumentv1alpha1 "github.com/pivotal/indicator-protocol/k8s/pkg/apis/indicatordocument/v1alpha1"
-	versioned "github.com/pivotal/indicator-protocol/k8s/pkg/client/clientset/versioned"
-	internalinterfaces "github.com/pivotal/indicator-protocol/k8s/pkg/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "github.com/pivotal/indicator-protocol/k8s/pkg/client/listers/indicatordocument/v1alpha1"
+	indicatordocumentv1alpha1 "github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/apis/indicatordocument/v1alpha1"
+	versioned "github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/client/clientset/versioned"
+	internalinterfaces "github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/client/informers/externalversions/internalinterfaces"
+	v1alpha1 "github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/client/listers/indicatordocument/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"

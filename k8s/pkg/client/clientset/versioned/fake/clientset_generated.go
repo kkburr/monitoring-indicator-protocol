@@ -19,9 +19,9 @@ limitations under the License.
 package fake
 
 import (
-	clientset "github.com/pivotal/indicator-protocol/k8s/pkg/client/clientset/versioned"
-	appsv1alpha1 "github.com/pivotal/indicator-protocol/k8s/pkg/client/clientset/versioned/typed/indicatordocument/v1alpha1"
-	fakeappsv1alpha1 "github.com/pivotal/indicator-protocol/k8s/pkg/client/clientset/versioned/typed/indicatordocument/v1alpha1/fake"
+	clientset "github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/client/clientset/versioned"
+	appsv1alpha1 "github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/client/clientset/versioned/typed/indicatordocument/v1alpha1"
+	fakeappsv1alpha1 "github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/client/clientset/versioned/typed/indicatordocument/v1alpha1/fake"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/discovery"

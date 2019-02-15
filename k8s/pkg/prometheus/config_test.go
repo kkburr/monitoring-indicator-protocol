@@ -2,8 +2,8 @@ package prometheus_test
 
 import (
 	. "github.com/onsi/gomega"
-	"github.com/pivotal/indicator-protocol/k8s/pkg/apis/indicatordocument/v1alpha1"
-	"github.com/pivotal/indicator-protocol/k8s/pkg/prometheus"
+	"github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/apis/indicatordocument/v1alpha1"
+	"github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/prometheus"
 	"k8s.io/apimachinery/pkg/apis/meta/v1"
 	"testing"
 )

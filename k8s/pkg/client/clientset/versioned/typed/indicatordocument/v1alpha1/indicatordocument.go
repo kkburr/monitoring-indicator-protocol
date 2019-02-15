@@ -21,8 +21,8 @@ package v1alpha1
 import (
 	"time"
 
-	v1alpha1 "github.com/pivotal/indicator-protocol/k8s/pkg/apis/indicatordocument/v1alpha1"
-	scheme "github.com/pivotal/indicator-protocol/k8s/pkg/client/clientset/versioned/scheme"
+	v1alpha1 "github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/apis/indicatordocument/v1alpha1"
+	scheme "github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
