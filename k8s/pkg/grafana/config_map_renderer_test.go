@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/pivotal/monitoring-indicator-protocol/pkg/indicator"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	"testing"
 
 	. "github.com/onsi/gomega"
@@ -27,6 +28,7 @@ func TestNoLayoutGeneratesDefaultDashboard(t *testing.T) {
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "test-name",
 			Namespace: "test-namespace",
+			UID:       types.UID("test-uid"),
 		},
 		Spec: v1alpha1.IndicatorDocumentSpec{
 			Product: v1alpha1.Product{
@@ -51,13 +53,14 @@ func TestNoLayoutGeneratesDefaultDashboard(t *testing.T) {
 		},
 	}
 
-	cm, err := grafana.ConfigMap(doc, func (indicator.Document) (string, error) {
+	cm, err := grafana.ConfigMap(doc, func(indicator.Document) (string, error) {
 		return "the-expected-json", nil
 	})
 
 	g.Expect(err).ToNot(HaveOccurred())
 	g.Expect(cm.Name).To(Equal("test-name-77c8855f6"))
 	g.Expect(cm.Namespace).To(Equal("test-namespace"))
+	g.Expect(cm.UID).To(Equal(types.UID("test-uid")))
 	g.Expect(cm.Data["dashboard.json"]).To(Equal("the-expected-json"))
 	g.Expect(cm.Labels["grafana_dashboard"]).To(Equal("true"))
 }
@@ -67,7 +70,7 @@ func TestDashboardMapperError(t *testing.T) {
 
 	doc := &v1alpha1.IndicatorDocument{}
 
-	_, err := grafana.ConfigMap(doc, func (indicator.Document) (string, error) {
+	_, err := grafana.ConfigMap(doc, func(indicator.Document) (string, error) {
 		return "", errors.New("some-error")
 	})
 

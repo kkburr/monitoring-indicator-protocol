@@ -21,7 +21,7 @@ func ConfigMap(doc *v1alpha1.IndicatorDocument, m mapper) (*v1.ConfigMap, error)
 	}
 
 	if m == nil {
-		m = func (document indicator.Document) (string, error) {
+		m = func(document indicator.Document) (string, error) {
 			dashboard := grafana_dashboard.DocumentToDashboard(document)
 			data, err := json.Marshal(dashboard)
 			if err != nil {
@@ -40,6 +40,7 @@ func ConfigMap(doc *v1alpha1.IndicatorDocument, m mapper) (*v1.ConfigMap, error)
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      cmName,
 			Namespace: doc.Namespace,
+			UID:       doc.UID,
 			Labels: map[string]string{
 				"grafana_dashboard": "true",
 			},
