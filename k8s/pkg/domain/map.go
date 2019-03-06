@@ -14,6 +14,11 @@ func Map(i *v1alpha1.IndicatorDocument) indicator.Document {
 		},
 		Metadata: i.Labels,
 		Indicators: indicators,
+
+		// TODO: add layouts correctly
+		Layout: indicator.Layout{
+			Title:       i.Spec.Layout.Title,
+		},
 	}
 }
 

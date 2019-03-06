@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	. "github.com/onsi/gomega"
 	"k8s.io/api/core/v1"
-	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"testing"
 )
@@ -23,7 +23,7 @@ func TestController(t *testing.T) {
 		p := prometheus.NewController(spyConfigMapPatcher, spyConfigRenderer)
 
 		i := &v1alpha1.IndicatorDocument{
-			ObjectMeta: v12.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:            "rabbit-mq-monitoring",
 			},
 		}
@@ -47,12 +47,12 @@ func TestController(t *testing.T) {
 		p := prometheus.NewController(spyConfigMapPatcher, spyConfigRenderer)
 
 		i1 := &v1alpha1.IndicatorDocument{
-			ObjectMeta: v12.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:            "rabbit-mq-monitoring-1",
 			},
 		}
 		i2 := &v1alpha1.IndicatorDocument{
-			ObjectMeta: v12.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:            "rabbit-mq-monitoring-2",
 			},
 		}
@@ -79,12 +79,12 @@ func TestController(t *testing.T) {
 		p := prometheus.NewController(spyConfigMapPatcher, spyConfigRenderer)
 
 		i1 := &v1alpha1.IndicatorDocument{
-			ObjectMeta: v12.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:            "rabbit-mq-monitoring-1",
 			},
 		}
 		i2 := &v1alpha1.IndicatorDocument{
-			ObjectMeta: v12.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:            "rabbit-mq-monitoring-1",
 			},
 		}
@@ -110,7 +110,7 @@ func TestController(t *testing.T) {
 		p := prometheus.NewController(spyConfigMapPatcher, spyConfigRenderer)
 
 		i := &v1alpha1.IndicatorDocument{
-			ObjectMeta: v12.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:            "rabbit-mq-monitoring-1",
 			},
 		}

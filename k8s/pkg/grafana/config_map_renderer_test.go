@@ -1,11 +1,10 @@
 package grafana_test
 
 import (
-	"encoding/base64"
+	"errors"
 	"github.com/pivotal/monitoring-indicator-protocol/pkg/indicator"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"testing"
-	"errors"
 
 	. "github.com/onsi/gomega"
 
@@ -57,12 +56,10 @@ func TestNoLayoutGeneratesDefaultDashboard(t *testing.T) {
 	})
 
 	g.Expect(err).ToNot(HaveOccurred())
-	g.Expect(cm.Name).To(Equal("test-name"))
+	g.Expect(cm.Name).To(Equal("test-name-77c8855f6"))
 	g.Expect(cm.Namespace).To(Equal("test-namespace"))
-	b64Data := cm.Data["dashboard.json"]
-	cmJSON, err := base64.StdEncoding.DecodeString(b64Data)
-	g.Expect(err).ToNot(HaveOccurred())
-	g.Expect(string(cmJSON)).To(Equal("the-expected-json"))
+	g.Expect(cm.Data["dashboard.json"]).To(Equal("the-expected-json"))
+	g.Expect(cm.Labels["grafana_dashboard"]).To(Equal("true"))
 }
 
 func TestDashboardMapperError(t *testing.T) {
