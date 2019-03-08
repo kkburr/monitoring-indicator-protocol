@@ -86,6 +86,58 @@ func TestDocumentToDashboard(t *testing.T) {
 		}))
 	})
 
+	t.Run("Uses the IP layout information to create distinct rows", func(t *testing.T) {
+		buffer := bytes.NewBuffer(nil)
+		log.SetOutput(buffer)
+
+		g := NewGomegaWithT(t)
+
+		document := indicator.Document{
+			Indicators: []indicator.Indicator{
+				{
+					Name:   "test_indicator",
+					PromQL: `sum_over_time(gorouter_latency_ms[30m])`,
+					Documentation: map[string]string{"title": "Test Indicator Title"},
+				},
+				{
+					Name:   "second_test_indicator",
+					PromQL: `rate(gorouter_requests[1m])`,
+				},
+			},
+			Layout: indicator.Layout{
+				Title: "Indicator Test Dashboard",
+				Sections: []indicator.Section{
+					{
+						Title: "foo",
+						Indicators: []indicator.Indicator{
+							{
+								Name:   "second_test_indicator",
+								PromQL: `rate(gorouter_requests[1m])`,
+							},
+						},
+					},
+					{
+						Title: "bar",
+						Indicators: []indicator.Indicator{
+							{
+								Name:   "test_indicator",
+								PromQL: `sum_over_time(gorouter_latency_ms[30m])`,
+								Documentation: map[string]string{"title": "Test Indicator Title"},
+							},
+						},
+					},
+				},
+			},
+		}
+
+		dashboard := grafana_dashboard.DocumentToDashboard(document)
+
+		g.Expect(dashboard.Rows[0].Title).To(Equal("foo"))
+		g.Expect(dashboard.Rows[0].Panels[0].Title).To(Equal("second_test_indicator"))
+		g.Expect(dashboard.Rows[1].Title).To(Equal("bar"))
+		g.Expect(dashboard.Rows[1].Panels[0].Title).To(Equal("Test Indicator Title"))
+	})
+
 	t.Run("falls back to product name/version when layout title is missing", func(t *testing.T) {
 		buffer := bytes.NewBuffer(nil)
 		log.SetOutput(buffer)
