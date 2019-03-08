@@ -12,4 +12,3 @@ spec:
     thresholds:
     - level: critical
       gt: 375
-

@@ -35,10 +35,12 @@ func (c *Controller) OnAdd(obj interface{}) {
 	configMap, err := ConfigMap(doc, nil)
 	if err != nil {
 		log.Printf("Failed to generate ConfigMap: %s", err)
+		return
 	}
 	_, err = c.cmEditor.Create(configMap)
 	if err != nil {
 		log.Printf("Failed to create ConfigMap: %s", err)
+		return
 	}
 }
 
@@ -60,19 +62,26 @@ func (c *Controller) OnUpdate(oldObj, newObj interface{}) {
 	configMap, err := ConfigMap(newDoc, nil)
 	if err != nil {
 		log.Printf("Failed to generate ConfigMap: %s", err)
+		return
 	}
 	_, err = c.cmEditor.Update(configMap)
 	if err != nil {
 		log.Printf("Failed to update ConfigMap: %s", err)
+		return
 	}
 }
 
 // TODO: evaluate edge case where object might not exist
 func (c *Controller) OnDelete(obj interface{}) {
-	doc, _ := obj.(*v1alpha1.IndicatorDocument)
+	doc, ok := obj.(*v1alpha1.IndicatorDocument)
+	if !ok {
+		log.Printf("OnDelete received a non-indicatordocument: %T", obj)
+		return
+	}
 	configMap, err := ConfigMap(doc, nil)
 	if err != nil {
 		log.Printf("Failed to generate ConfigMap: %s", err)
+		return
 	}
 	err = c.cmEditor.Delete(configMap.Name, &metav1.DeleteOptions{
 		Preconditions: &metav1.Preconditions{
@@ -81,5 +90,6 @@ func (c *Controller) OnDelete(obj interface{}) {
 	})
 	if err != nil {
 		log.Printf("Failed to delete ConfigMap: %s", err)
+		return
 	}
 }

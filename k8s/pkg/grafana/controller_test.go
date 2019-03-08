@@ -10,30 +10,6 @@ import (
 	"testing"
 )
 
-func indicatorDocument() *v1alpha1.IndicatorDocument {
-	return &v1alpha1.IndicatorDocument{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: "rabbit-mq-resource-name",
-			UID:  types.UID("some-uid"),
-		},
-		Spec: v1alpha1.IndicatorDocumentSpec{
-			Product: v1alpha1.Product{
-				Name:    "rabbit-mq-product-name",
-				Version: "v1.0",
-			},
-			Indicators: []v1alpha1.Indicator{
-				{
-					Name:   "qps",
-					Promql: "rate(qps)",
-				},
-			},
-			Layout: v1alpha1.Layout{
-				Title: "rabbit-mq-layout-title",
-			},
-		},
-	}
-}
-
 func TestController(t *testing.T) {
 	t.Run("it adds", func(t *testing.T) {
 		g := NewGomegaWithT(t)
@@ -83,7 +59,7 @@ func TestController(t *testing.T) {
 
 		controller.OnAdd(666)
 
-		spyConfigMapEditor.expectCreated(nil)
+		spyConfigMapEditor.expectThatNothingWasCreated()
 	})
 
 	t.Run("it updates", func(t *testing.T) {
@@ -134,10 +110,10 @@ func TestController(t *testing.T) {
 		controller := grafana.NewController(spyConfigMapEditor)
 
 		controller.OnUpdate(indicatorDocument(), 616)
-		spyConfigMapEditor.expectUpdated(nil)
+		spyConfigMapEditor.expectThatNothingWasUpdated()
 
 		controller.OnUpdate("asdf", indicatorDocument())
-		spyConfigMapEditor.expectUpdated(nil)
+		spyConfigMapEditor.expectThatNothingWasUpdated()
 	})
 
 	t.Run("does not update when new and old objects are the same", func(t *testing.T) {
@@ -146,9 +122,9 @@ func TestController(t *testing.T) {
 		controller := grafana.NewController(spyConfigMapEditor)
 
 		controller.OnUpdate(nil, nil)
-		spyConfigMapEditor.expectUpdated(nil)
+		spyConfigMapEditor.expectThatNothingWasUpdated()
 		controller.OnUpdate(indicatorDocument(), indicatorDocument())
-		spyConfigMapEditor.expectUpdated(nil)
+		spyConfigMapEditor.expectThatNothingWasUpdated()
 	})
 
 	t.Run("it deletes", func(t *testing.T) {
@@ -171,6 +147,18 @@ func TestController(t *testing.T) {
 			},
 		})
 	})
+
+	t.Run("fails to delete a non-indicators", func(t *testing.T) {
+		g := NewGomegaWithT(t)
+		spyConfigMapEditor := &spyConfigMapEditor{g: g}
+		controller := grafana.NewController(spyConfigMapEditor)
+
+		controller.OnDelete("non-indicator")
+
+		spyConfigMapEditor.expectThatNothingWasDeleted()
+	})
+
+	// TODO: test that a namespace provided to the controller is set in the cm objects
 }
 
 type deleteCall struct {
@@ -220,4 +208,38 @@ func (s *spyConfigMapEditor) expectUpdated(cms []*v1.ConfigMap) {
 
 func (s *spyConfigMapEditor) expectDeleted(dcs []deleteCall) {
 	s.g.Expect(s.deleteCalls).To(Equal(dcs))
+}
+
+func (s *spyConfigMapEditor) expectThatNothingWasCreated() {
+	s.g.Expect(s.createCalls).To(BeNil())
+}
+func (s *spyConfigMapEditor) expectThatNothingWasUpdated() {
+	s.g.Expect(s.updateCalls).To(BeNil())
+}
+func (s *spyConfigMapEditor) expectThatNothingWasDeleted() {
+	s.g.Expect(s.deleteCalls).To(BeNil())
+}
+
+func indicatorDocument() *v1alpha1.IndicatorDocument {
+	return &v1alpha1.IndicatorDocument{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "rabbit-mq-resource-name",
+			UID:  types.UID("some-uid"),
+		},
+		Spec: v1alpha1.IndicatorDocumentSpec{
+			Product: v1alpha1.Product{
+				Name:    "rabbit-mq-product-name",
+				Version: "v1.0",
+			},
+			Indicators: []v1alpha1.Indicator{
+				{
+					Name:   "qps",
+					Promql: "rate(qps)",
+				},
+			},
+			Layout: v1alpha1.Layout{
+				Title: "rabbit-mq-layout-title",
+			},
+		},
+	}
 }
