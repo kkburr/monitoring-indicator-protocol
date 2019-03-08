@@ -1,6 +1,7 @@
 package grafana_dashboard
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/pivotal/monitoring-indicator-protocol/pkg/indicator"
@@ -12,9 +13,16 @@ func DocumentToDashboard(document indicator.Document) GrafanaDashboard {
 
 func toGrafanaDashboard(d indicator.Document) GrafanaDashboard {
 	return GrafanaDashboard{
-		Title: d.Layout.Title,
+		Title: getDashboardTitle(d),
 		Rows:  toGrafanaRows(d.Indicators),
 	}
+}
+
+func getDashboardTitle(d indicator.Document) string {
+	if d.Layout.Title == "" {
+		return fmt.Sprintf("%s - %s", d.Product.Name, d.Product.Version)
+	}
+	return d.Layout.Title
 }
 
 func toGrafanaRows(indicators []indicator.Indicator) []GrafanaRow {
