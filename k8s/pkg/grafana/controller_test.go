@@ -8,6 +8,7 @@ import (
 	"k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"reflect"
 	"testing"
 )
 
@@ -56,7 +57,7 @@ func TestController(t *testing.T) {
 	t.Run("on add it updates existing config map", func(t *testing.T) {
 		g := NewGomegaWithT(t)
 
-		spyConfigMapEditor := &spyConfigMapEditor{g: g}
+		spyConfigMapEditor := &spyConfigMapEditor{g: g, getExists: true}
 		spyConfigMapEditor.alreadyCreated()
 		controller := grafana.NewController(spyConfigMapEditor)
 
@@ -247,12 +248,13 @@ func (s *spyConfigMapEditor) alreadyCreated() {
 }
 
 func (s *spyConfigMapEditor) expectCreated(cms []*v1.ConfigMap) {
-	s.g.T.Helper()
 	s.g.Expect(s.createCalls).To(HaveLen(len(cms)))
 	for i, cm := range cms {
 		s.g.Expect(s.createCalls[i].Name).To(Equal(cm.Name))
 		s.g.Expect(s.createCalls[i].Labels).To(Equal(cm.Labels))
-		s.g.Expect(s.createCalls[i].Data["dashboard.json"]).To(MatchJSON(cm.Data["dashboard.json"]))
+
+		dashboardFilename := reflect.ValueOf(s.createCalls[i].Data).MapKeys()[0].String()
+		s.g.Expect(s.createCalls[i].Data[dashboardFilename]).To(MatchJSON(cm.Data["dashboard.json"]))
 	}
 }
 
@@ -261,7 +263,9 @@ func (s *spyConfigMapEditor) expectUpdated(cms []*v1.ConfigMap) {
 	for i, cm := range cms {
 		s.g.Expect(s.updateCalls[i].Name).To(Equal(cm.Name))
 		s.g.Expect(s.updateCalls[i].Labels).To(Equal(cm.Labels))
-		s.g.Expect(s.updateCalls[i].Data["dashboard.json"]).To(MatchJSON(cm.Data["dashboard.json"]))
+
+		dashboardFilename := reflect.ValueOf(s.updateCalls[i].Data).MapKeys()[0].String()
+		s.g.Expect(s.updateCalls[i].Data[dashboardFilename]).To(MatchJSON(cm.Data["dashboard.json"]))
 	}
 }
 

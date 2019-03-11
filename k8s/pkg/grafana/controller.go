@@ -26,8 +26,6 @@ func NewController(configMap ConfigMapEditor) *Controller {
 	}
 }
 
-// TODO: what happens when you have two config maps with the same filename (ie: dashboard.json)
-// TODO: evaluate edge case where object might already exist
 func (c *Controller) OnAdd(obj interface{}) {
 	doc, ok := obj.(*v1alpha1.IndicatorDocument)
 	if !ok {
@@ -39,8 +37,7 @@ func (c *Controller) OnAdd(obj interface{}) {
 		return
 	}
 
-	_, err = c.cmEditor.Get(configMap.Name, metav1.GetOptions{})
-	if err != nil {
+	if c.configMapAlreadyExists(configMap) {
 		_, err = c.cmEditor.Update(configMap)
 		if err != nil {
 			log.Printf("Failed to update while adding ConfigMap: %s", err)
@@ -103,4 +100,10 @@ func (c *Controller) OnDelete(obj interface{}) {
 		log.Printf("Failed to delete ConfigMap: %s", err)
 		return
 	}
+}
+
+func (c *Controller) configMapAlreadyExists(configMap *v1.ConfigMap) bool {
+	_, err := c.cmEditor.Get(configMap.Name, metav1.GetOptions{})
+
+	return err == nil
 }

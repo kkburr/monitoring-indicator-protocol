@@ -13,7 +13,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-type mapper func(document indicator.Document) (string, error)
+type mapper func(document indicator.Document) ([]byte, error)
 
 func ConfigMap(doc *v1alpha1.IndicatorDocument, m mapper) (*v1.ConfigMap, error) {
 	if doc == nil {
@@ -21,19 +21,23 @@ func ConfigMap(doc *v1alpha1.IndicatorDocument, m mapper) (*v1.ConfigMap, error)
 	}
 
 	if m == nil {
-		m = func(document indicator.Document) (string, error) {
+		m = func(document indicator.Document) ([]byte, error) {
 			dashboard := grafana_dashboard.DocumentToDashboard(document)
 			data, err := json.Marshal(dashboard)
 			if err != nil {
-				return "", err
+				return nil, err
 			}
-			return string(data), nil
+			return data, nil
 		}
 	}
-	jsonVal, err := m(domain.Map(doc))
+
+	document := domain.Map(doc)
+	jsonVal, err := m(document)
 	if err != nil {
 		return nil, err
 	}
+
+	fileName := fmt.Sprintf("%s_%x.json", document.Product.Name, sha1.Sum([]byte(jsonVal)))
 
 	cmName := doc.Name + "-" + fmt.Sprintf("%x", sha1.Sum([]byte(doc.Name)))[:9]
 	cm := &v1.ConfigMap{
@@ -45,7 +49,7 @@ func ConfigMap(doc *v1alpha1.IndicatorDocument, m mapper) (*v1.ConfigMap, error)
 			},
 		},
 		Data: map[string]string{
-			"dashboard.json": jsonVal,
+			fileName: string(jsonVal),
 		},
 	}
 

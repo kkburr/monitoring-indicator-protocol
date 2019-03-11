@@ -53,14 +53,14 @@ func TestNoLayoutGeneratesDefaultDashboard(t *testing.T) {
 		},
 	}
 
-	cm, err := grafana.ConfigMap(doc, func(indicator.Document) (string, error) {
-		return "the-expected-json", nil
+	cm, err := grafana.ConfigMap(doc, func(indicator.Document) ([]byte, error) {
+		return []byte("the-expected-json"), nil
 	})
 
 	g.Expect(err).ToNot(HaveOccurred())
 	g.Expect(cm.Name).To(Equal("test-name-77c8855f6"))
 	g.Expect(cm.UID).To(Equal(types.UID("test-uid")))
-	g.Expect(cm.Data["dashboard.json"]).To(Equal("the-expected-json"))
+	g.Expect(cm.Data["my_app_3557e2a48e894b31ff24c4a09bf861a13001fa02.json"]).To(Equal("the-expected-json"))
 	g.Expect(cm.Labels["grafana_dashboard"]).To(Equal("true"))
 }
 
@@ -69,8 +69,8 @@ func TestDashboardMapperError(t *testing.T) {
 
 	doc := &v1alpha1.IndicatorDocument{}
 
-	_, err := grafana.ConfigMap(doc, func(indicator.Document) (string, error) {
-		return "", errors.New("some-error")
+	_, err := grafana.ConfigMap(doc, func(indicator.Document) ([]byte, error) {
+		return nil, errors.New("some-error")
 	})
 
 	g.Expect(err).To(HaveOccurred())
