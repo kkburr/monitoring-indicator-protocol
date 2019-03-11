@@ -13,6 +13,7 @@ type ConfigMapEditor interface {
 	Create(*v1.ConfigMap) (*v1.ConfigMap, error)
 	Update(*v1.ConfigMap) (*v1.ConfigMap, error)
 	Delete(name string, options *metav1.DeleteOptions) error
+	Get(name string, options metav1.GetOptions) (*v1.ConfigMap, error)
 }
 
 type Controller struct {
@@ -37,6 +38,16 @@ func (c *Controller) OnAdd(obj interface{}) {
 		log.Printf("Failed to generate ConfigMap: %s", err)
 		return
 	}
+
+	_, err = c.cmEditor.Get(configMap.Name, metav1.GetOptions{})
+	if err != nil {
+		_, err = c.cmEditor.Update(configMap)
+		if err != nil {
+			log.Printf("Failed to update while adding ConfigMap: %s", err)
+		}
+		return
+	}
+
 	_, err = c.cmEditor.Create(configMap)
 	if err != nil {
 		log.Printf("Failed to create ConfigMap: %s", err)

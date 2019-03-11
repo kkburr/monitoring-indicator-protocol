@@ -7,7 +7,7 @@ rules:
   # The grafana-indicator-controller needs to create, update, and delete configmaps for grafana
   - apiGroups: [""] # "" indicates the core API group
     resources: ["configmaps"]
-    verbs: ["create", "update", "delete"]
+    verbs: ["get", "create", "update", "delete"]
   # The grafana-indicator-controller needs to be able to watch indicatordocuments
   - apiGroups: ["apps.pivotal.io"]
     resources: ["indicatordocuments"]

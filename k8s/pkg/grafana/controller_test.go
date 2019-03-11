@@ -1,6 +1,7 @@
 package grafana_test
 
 import (
+	"errors"
 	. "github.com/onsi/gomega"
 	"github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/apis/indicatordocument/v1alpha1"
 	"github.com/pivotal/monitoring-indicator-protocol/k8s/pkg/grafana"
@@ -19,6 +20,50 @@ func TestController(t *testing.T) {
 		controller.OnAdd(indicatorDocument())
 
 		spyConfigMapEditor.expectCreated([]*v1.ConfigMap{
+			{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "rabbit-mq-resource-name-620771403",
+					Labels: map[string]string{
+						"grafana_dashboard": "true",
+					},
+				},
+				Data: map[string]string{
+					"dashboard.json": `{
+					  "title": "rabbit-mq-layout-title",
+					  "rows": [
+					    {
+					      "title": "qps",
+					      "panels": [
+					        {
+					          "title": "qps",
+					          "type": "graph",
+					          "targets": [
+					            {
+					              "expr": "rate(qps)"
+					            }
+					          ],
+					          "thresholds": null
+					        }
+					      ]
+					    }
+					  ]
+					}`,
+				},
+			},
+		})
+	})
+
+	t.Run("on add it updates existing config map", func(t *testing.T) {
+		g := NewGomegaWithT(t)
+
+		spyConfigMapEditor := &spyConfigMapEditor{g: g}
+		spyConfigMapEditor.alreadyCreated()
+		controller := grafana.NewController(spyConfigMapEditor)
+
+		controller.OnAdd(indicatorDocument())
+
+		spyConfigMapEditor.expectThatNothingWasCreated()
+		spyConfigMapEditor.expectUpdated([]*v1.ConfigMap{
 			{
 				ObjectMeta: metav1.ObjectMeta{
 					Name: "rabbit-mq-resource-name-620771403",
@@ -167,7 +212,9 @@ type deleteCall struct {
 }
 
 type spyConfigMapEditor struct {
-	g           *GomegaWithT
+	g *GomegaWithT
+
+	getExists bool
 	createCalls []*v1.ConfigMap
 	updateCalls []*v1.ConfigMap
 	deleteCalls []deleteCall
@@ -188,7 +235,19 @@ func (s *spyConfigMapEditor) Delete(name string, do *metav1.DeleteOptions) error
 	return nil
 }
 
+func (s *spyConfigMapEditor) Get(name string, options metav1.GetOptions) (*v1.ConfigMap, error) {
+	if s.getExists {
+		return nil, nil
+	}
+	return nil, errors.New("not found")
+}
+
+func (s *spyConfigMapEditor) alreadyCreated() {
+	s.getExists = true
+}
+
 func (s *spyConfigMapEditor) expectCreated(cms []*v1.ConfigMap) {
+	s.g.T.Helper()
 	s.g.Expect(s.createCalls).To(HaveLen(len(cms)))
 	for i, cm := range cms {
 		s.g.Expect(s.createCalls[i].Name).To(Equal(cm.Name))
