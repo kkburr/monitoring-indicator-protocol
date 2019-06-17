@@ -2,7 +2,7 @@
 apiVersion: v0
 
 product:
-  name: my-component
+  name: kaitlin-test-component
   version: 1.2.3
 
 metadata:
